@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="../css/equipo.css">
+  <title>Equipos</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="../views/home.hbs">
+            <div>
+                <span class="material-symbols-outlined">home</span> Inicio
+            </div>
+        </a>
+        <a href="../views/calendar.hbs">
+            <div>
+                <span class="material-symbols-outlined">calendar_today</span> Calendario
+            </div>
+        </a>
+        <a href="../views/equipos.hbs">
+            <div>
+                <span class="material-symbols-outlined">description</span> Equipos
+            </div>
+        </a>
+        <a href="../views/reporte.hbs">
+            <div>
+                <span class="material-symbols-outlined">assessment</span> Generar Reporte
+            </div>
+        </a>
+        <a href="../views/confirmacion.hbs">
+            <div>
+                <span class="material-symbols-outlined">badge</span> Confirmacion
+            </div>
+        </a>
+    </div>
+
+  <div class="content">
+    <h3>Equipos</h3>
+
+    <!-- Botón para agregar nuevo equipo -->
+    <button class="add-equipo" onclick="openModal()">Agregar Equipo</button>
+
+    <!-- Modal para agregar nuevo equipo -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Agregar Nuevo Equipo</h2>
+        <form id="equipo-form">
+          <label for="idEquipo">ID Equipo:</label>
+          <input type="text" id="idEquipo" name="idEquipo" required>
+
+          <label for="nombreTipo">Nombre Tipo:</label>
+          <input type="text" id="nombreTipo" name="nombreTipo" required>
+
+          <label for="nombreEquipo">Nombre Equipo:</label>
+          <input type="text" id="nombreEquipo" name="nombreEquipo" required>
+
+          <label for="codigoEquipo">Código Equipo:</label>
+          <input type="text" id="codigoEquipo" name="codigoEquipo" required>
+
+          <button type="submit">Agregar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabla de equipos -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID Equipo</th>
+            <th>Nombre Tipo</th>
+            <th>Nombre Equipo</th>
+            <th>Código Equipo</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <!-- Filas de equipos se generan aquí -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Datos iniciales de equipos
+    const equipos = [
+      { idEquipo: 1, nombreTipo: 'Transporte', nombreEquipo: 'Banda Transportadora', codigoEquipo: 'BT-101' },
+      { idEquipo: 2, nombreTipo: 'Envasado', nombreEquipo: 'Máquina Envasadora', codigoEquipo: 'ME-202' },
+    ];
+
+    // Función para renderizar la tabla
+    function renderizarTabla() {
+      const tablaBody = document.getElementById('tabla-body');
+      tablaBody.innerHTML = '';
+
+      equipos.forEach(equipo => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${equipo.idEquipo}</td>
+          <td>${equipo.nombreTipo}</td>
+          <td>${equipo.nombreEquipo}</td>
+          <td>${equipo.codigoEquipo}</td>
+        `;
+        tablaBody.appendChild(fila);
+      });
+    }
+
+    // Función para abrir el modal
+    function openModal() {
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Función para agregar un nuevo equipo
+    document.getElementById('equipo-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const idEquipo = document.getElementById('idEquipo').value;
+      const nombreTipo = document.getElementById('nombreTipo').value;
+      const nombreEquipo = document.getElementById('nombreEquipo').value;
+      const codigoEquipo = document.getElementById('codigoEquipo').value;
+
+      // Agregar el nuevo equipo
+      equipos.push({ idEquipo, nombreTipo, nombreEquipo, codigoEquipo });
+
+      // Renderizar la tabla con el nuevo equipo
+      renderizarTabla();
+
+      // Cerrar el modal y limpiar el formulario
+      closeModal();
+      document.getElementById('equipo-form').reset();
+    });
+
+    // Renderizar la tabla inicial
+    renderizarTabla();
+  </script>
+</body>
+
+</html>

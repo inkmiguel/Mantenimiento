@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="../css/home.css">
+    <title>Incio</title>
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="../html/home.html">
+            <div>
+                <span class="material-symbols-outlined">home</span> Inicio
+            </div>
+        </a>
+        <a href="../views/calenar.html">
+            <div>
+                <span class="material-symbols-outlined">calendar_clock</span> Calendario
+            </div>
+        </a>
+        <a href="../html/Documents.html">
+            <div>
+                <span class="material-symbols-outlined">sync_desktop</span> Equipos
+            </div>
+        </a>
+        <a href="../html/Report.html">
+            <div>
+                <span class="material-symbols-outlined">upload_file</span> Generar Reporte
+            </div>
+        </a>
+        <a href="../html/Report.html">
+            <div>
+                <span class="material-symbols-outlined">badge</span> Confirmacion
+            </div>
+        </a>
+    </div>
+
+    <div class="content">
+        <h3>Lista de Equipos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Reporte</th>
+                    <th>codigo del Equipo</th>
+                    <th>Estado</th>
+                    <th>Fecha de Corte</th>
+                </tr>
+            </thead>
+            <tbody id="equiposTable"></tbody>
+        </table>
+    </div>
+
+    <div id="modal">
+        <h3>Actualizar Estado</h3>
+        <input id="nombreResponsable" placeholder="Nombre del Responsable" />
+        <input id="fechaSubida" type="date" />
+        <button onclick="confirmarEntrega()">Confirmar Entrega</button>
+        <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+   <script>
+        const dataBase = {
+            TipoEquipo: [
+                { idTipo: 1, NombreTipo: "Laptop" },
+                { idTipo: 2, NombreTipo: "Cinta de Velocidad" },
+                { idTipo: 3, NombreTipo: "Bomba" },
+            ],
+            Equipos: [
+                { idEquipos: 101, idTipo: 1, nombreEquipo: "Laptop Dell XPS", codigoEquipo: "LAP2025A", IdFrecuencia: 1, fechaCorte: "01/04/2025", estado: "Sin Entregar" },
+                { idEquipos: 102, idTipo: 2, nombreEquipo: "Cinta Velocidad Pro", codigoEquipo: "CINTA2025B", IdFrecuencia: 2, fechaCorte: "10/04/2025", estado: "Sin Entregar" },
+                { idEquipos: 103, idTipo: 3, nombreEquipo: "Bomba Industrial", codigoEquipo: "BOMBA2025C", IdFrecuencia: 3, fechaCorte: "20/04/2025", estado: "Sin Entregar" },
+            ],
+            Frecuencia: [
+                { IdFrecuencia: 1, TipoFrecuencia: "Semanal" },
+                { IdFrecuencia: 2, TipoFrecuencia: "Mensual" },
+                { IdFrecuencia: 3, TipoFrecuencia: "Trimestral" },
+            ],
+        };
+
+        let currentEquipoId = null;
+
+        const tableBody = document.getElementById('equiposTable');
+        dataBase.Equipos.forEach(equipo => {
+            const tipo = dataBase.TipoEquipo.find(t => t.idTipo === equipo.idTipo)?.NombreTipo || 'Desconocido';
+            const frecuencia = dataBase.Frecuencia.find(f => f.IdFrecuencia === equipo.IdFrecuencia)?.TipoFrecuencia || 'N/A';
+            const estadoClass = equipo.estado === "Entregado" ? 'status green' : 'status';
+            const row = `<tr>
+        <td>${equipo.idEquipos}</td>
+        <td>${equipo.nombreEquipo}</td>
+        <td>${equipo.codigoEquipo}</td>
+        <td>${tipo}</td>
+        <td>${frecuencia}</td>
+        <td>${equipo.fechaCorte}</td>
+        <td class="${estadoClass}" onclick="abrirModal(${equipo.idEquipos})">${equipo.estado}</td>
+      </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        function abrirModal(id) {
+            currentEquipoId = id;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function confirmarEntrega() {
+            const responsable = document.getElementById('nombreResponsable').value;
+            const fecha = document.getElementById('fechaSubida').value;
+            if (responsable && fecha) {
+                const equipo = dataBase.Equipos.find(e => e.idEquipos === currentEquipoId);
+                equipo.estado = "Entregado";
+                alert(`Estado actualizado por ${responsable} el ${fecha}`);
+                location.reload();
+            } else {
+                alert("Por favor, complete todos los campos.");
+            }
+        }
+    </script>

@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+}
+
+.sidebar {
+  background-color: #0000FF;
+  color: white;
+  width: 200px;
+  height: 100vh;
+  padding-top: 20px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Hace que el enlace ocupe todo el espacio del div */
+}
+
+.sidebar div {
+  padding: 20px;
+  cursor: pointer;
+  margin: 5px;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  border-radius: 5px;
+  transition: background-color 0.3s ease; /* Transición suave al hacer hover */
+}
+
+.sidebar div:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Cambia el fondo al hacer hover */
+}
+
+.content {
+  background-color: #E0E0E0;
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.status {
+  color: red;
+  cursor: pointer;
+}
+
+.status.green {
+  color: green;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+#modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
+
+#modal input {
+  display: block;
+  margin-bottom: 10px;
+}

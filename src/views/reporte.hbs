@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generar Documento</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="../css/Documents.css"> <!-- Enlaza el CSS aquí -->
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="sidebar">
+    <a href="../views/home.hbs">
+        <div>
+            <span class="material-symbols-outlined">home</span> Inicio
+        </div>
+    </a>
+    <a href="../views/calendar.hbs">
+        <div>
+            <span class="material-symbols-outlined">calendar_today</span> Calendario
+        </div>
+    </a>
+    <a href="../views/equipos.hbs">
+        <div>
+            <span class="material-symbols-outlined">description</span> Equipos
+        </div>
+    </a>
+    <a href="../views/reporte.hbs">
+        <div>
+            <span class="material-symbols-outlined">assessment</span> Generar Reporte
+        </div>
+    </a>
+    <a href="../views/confirmacion.hbs">
+        <div>
+            <span class="material-symbols-outlined">badge</span> Confirmacion
+        </div>
+    </a>
+</div>
+
+  <!-- Contenido principal -->
+  <div class="content">
+    <h1>Generar Documento de Reparación</h1>
+
+    <!-- Formulario -->
+    <form class="formulario" id="formulario">
+      <label for="ID_REPORTE">ID del Reporte:</label>
+      <input type="text" id="ID_REPORTE" name="ID_REPORTE" required>
+
+      <label for="date">Fecha de Reparación:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="fecha_corte">Fecha de Corte:</label>
+      <input type="date" id="fecha_corte" name="fecha_corte" required>
+
+      <label for="nombre">Nombre del Responsable:</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="apellido">Apellido del Responsable:</label>
+      <input type="text" id="apellido" name="apellido" required>
+
+      <label for="idEquipo">ID del Equipo:</label>
+      <input type="text" id="idEquipo" name="idEquipo" required>
+
+      <label for="frecuencia">Frecuencia de Mantenimiento:</label>
+      <input type="text" id="frecuencia" name="frecuencia" required>
+
+      <label for="piso">Piso/Área:</label>
+      <input type="text" id="piso" name="piso" required>
+
+      <button type="submit" class="boton">Generar Documento</button>
+    </form>
+
+    <!-- Tabla -->
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID Comprobante</th>
+          <th>ID Reporte</th>
+          <th>Documento</th>
+          <th>Fecha de Término</th>
+          <th>Nombre del Responsable</th>
+          <th>Apellido del Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>101</td>
+          <td><a href="documento1.pdf" target="_blank">Ver PDF</a></td>
+          <td>2023-10-15</td>
+          <td>Juan</td>
+          <td>Pérez</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>102</td>
+          <td><a href="documento2.pdf" target="_blank">Ver PDF</a></td>
+          <td>2023-10-20</td>
+          <td>María</td>
+          <td>Gómez</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
