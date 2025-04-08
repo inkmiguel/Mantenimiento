@@ -1,5 +1,5 @@
 module.exports = {
-    getdocuments: (res, req)=>{
+    getdocuments: (req, res)=>{
         res.render('documents', {
             title: 'Documents'   
         });

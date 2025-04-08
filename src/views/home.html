@@ -7,13 +7,12 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="../css/home.css">
-    <title>Incio</title>
-
+    <title>Inicio</title>
 </head>
 
 <body>
     <div class="sidebar">
-        <a href="../html/home.html">
+        <a href="../views/home.html">
             <div>
                 <span class="material-symbols-outlined">home</span> Inicio
             </div>
@@ -23,17 +22,17 @@
                 <span class="material-symbols-outlined">calendar_clock</span> Calendario
             </div>
         </a>
-        <a href="../html/Documents.html">
+        <a href="../views/equipos.html">
             <div>
                 <span class="material-symbols-outlined">sync_desktop</span> Equipos
             </div>
         </a>
-        <a href="../html/Report.html">
+        <a href="../views/reporte.html">
             <div>
                 <span class="material-symbols-outlined">upload_file</span> Generar Reporte
             </div>
         </a>
-        <a href="../html/Report.html">
+        <a href="../views/comprobante.html">
             <div>
                 <span class="material-symbols-outlined">badge</span> Confirmacion
             </div>
@@ -42,26 +41,186 @@
 
     <div class="content">
         <h3>Lista de Equipos</h3>
+        
+        <!-- Formulario para añadir nuevo equipo -->
+        <div class="add-equipo-form">
+            <h4>Añadir Nuevo Equipo</h4>
+            <input type="text" id="nuevoIdReporte" placeholder="ID Reporte" />
+            <input type="text" id="nuevoCodigoEquipo" placeholder="Código del Equipo" />
+            <input type="date" id="nuevaFechaCorte" />
+            <button onclick="agregarEquipo()">Añadir Equipo</button>
+        </div>
+        
+        <!-- Tabla de equipos -->
         <table>
             <thead>
                 <tr>
                     <th>ID Reporte</th>
-                    <th>codigo del Equipo</th>
+                    <th>Código del Equipo</th>
                     <th>Estado</th>
                     <th>Fecha de Corte</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="equiposTable"></tbody>
         </table>
     </div>
 
+    <!-- Modal para actualizar estado -->
     <div id="modal">
         <h3>Actualizar Estado</h3>
+        <input id="idReporteModal" type="hidden" />
+        <input id="codigoEquipoModal" type="hidden" />
+        <select id="nuevoEstado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Completado">Completado</option>
+        </select>
         <input id="nombreResponsable" placeholder="Nombre del Responsable" />
         <input id="fechaSubida" type="date" />
-        <button onclick="confirmarEntrega()">Confirmar Entrega</button>
+        <button onclick="confirmarCambios()">Confirmar Cambios</button>
         <button onclick="cerrarModal()">Cancelar</button>
     </div>
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+
+    <script>
+        // Al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar equipos guardados
+            cargarEquipos();
+        });
+
+        function cargarEquipos() {
+            const equiposTable = document.getElementById('equiposTable');
+            equiposTable.innerHTML = '';
+            
+            // Obtener equipos de sessionStorage
+            const equipos = JSON.parse(sessionStorage.getItem('equipos')) || [];
+            
+            // Mostrar equipos en la tabla
+            equipos.forEach(equipo => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${equipo.idReporte}</td>
+                    <td>${equipo.codigoEquipo}</td>
+                    <td class="estado-${equipo.estado.toLowerCase().replace(' ', '-')}">${equipo.estado}</td>
+                    <td>${equipo.fechaCorte}</td>
+                    <td>
+                        <button onclick="abrirModal('${equipo.idReporte}', '${equipo.codigoEquipo}', '${equipo.estado}')">Actualizar Estado</button>
+                        <button onclick="eliminarEquipo('${equipo.idReporte}', '${equipo.codigoEquipo}')">Eliminar</button>
+                    </td>
+                `;
+                
+                equiposTable.appendChild(row);
+            });
+        }
+
+        function agregarEquipo() {
+            const idReporte = document.getElementById('nuevoIdReporte').value;
+            const codigoEquipo = document.getElementById('nuevoCodigoEquipo').value;
+            const fechaCorte = document.getElementById('nuevaFechaCorte').value;
+            
+            if (!idReporte || !codigoEquipo || !fechaCorte) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+            
+            // Obtener equipos actuales
+            const equipos = JSON.parse(sessionStorage.getItem('equipos')) || [];
+            
+            // Verificar si el equipo ya existe
+            const existe = equipos.some(e => e.idReporte === idReporte && e.codigoEquipo === codigoEquipo);
+            if (existe) {
+                alert('Este equipo ya está registrado');
+                return;
+            }
+            
+            // Añadir nuevo equipo
+            equipos.push({
+                idReporte: idReporte,
+                codigoEquipo: codigoEquipo,
+                estado: 'Pendiente',
+                fechaCorte: fechaCorte
+            });
+            
+            // Guardar en sessionStorage
+            sessionStorage.setItem('equipos', JSON.stringify(equipos));
+            
+            // Recargar la tabla
+            cargarEquipos();
+            
+            // Limpiar formulario
+            document.getElementById('nuevoIdReporte').value = '';
+            document.getElementById('nuevoCodigoEquipo').value = '';
+            document.getElementById('nuevaFechaCorte').value = '';
+        }
+
+        function abrirModal(idReporte, codigoEquipo, estadoActual) {
+            document.getElementById('idReporteModal').value = idReporte;
+            document.getElementById('codigoEquipoModal').value = codigoEquipo;
+            document.getElementById('nuevoEstado').value = estadoActual;
+            document.getElementById('modal').style.display = 'block';
+            document.getElementById('modalBackdrop').style.display = 'block';
+            
+            // Establecer fecha actual por defecto
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaSubida').value = today;
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        function confirmarCambios() {
+            const idReporte = document.getElementById('idReporteModal').value;
+            const codigoEquipo = document.getElementById('codigoEquipoModal').value;
+            const nuevoEstado = document.getElementById('nuevoEstado').value;
+            const nombreResponsable = document.getElementById('nombreResponsable').value;
+            const fechaSubida = document.getElementById('fechaSubida').value;
+            
+            if (!nombreResponsable || !fechaSubida) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+            
+            // Obtener equipos actuales
+            const equipos = JSON.parse(sessionStorage.getItem('equipos'));
+            
+            // Actualizar el equipo correspondiente
+            const equipoIndex = equipos.findIndex(e => e.idReporte === idReporte && e.codigoEquipo === codigoEquipo);
+            if (equipoIndex !== -1) {
+                equipos[equipoIndex].estado = nuevoEstado;
+                equipos[equipoIndex].responsable = nombreResponsable;
+                equipos[equipoIndex].fechaActualizacion = fechaSubida;
+                
+                // Guardar cambios
+                sessionStorage.setItem('equipos', JSON.stringify(equipos));
+                
+                // Recargar la tabla
+                cargarEquipos();
+            }
+            
+            cerrarModal();
+        }
+
+        function eliminarEquipo(idReporte, codigoEquipo) {
+            if (confirm('¿Está seguro que desea eliminar este equipo?')) {
+                // Obtener equipos actuales
+                const equipos = JSON.parse(sessionStorage.getItem('equipos'));
+                
+                // Filtrar para eliminar el equipo seleccionado
+                const nuevosEquipos = equipos.filter(e => !(e.idReporte === idReporte && e.codigoEquipo === codigoEquipo));
+                
+                // Guardar cambios
+                sessionStorage.setItem('equipos', JSON.stringify(nuevosEquipos));
+                
+                // Recargar la tabla
+                cargarEquipos();
+            }
+        }
+    </script>
 </body>
 
 </html>

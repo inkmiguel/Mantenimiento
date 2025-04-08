@@ -10,27 +10,27 @@
 <body>
   <!-- Navbar -->
   <div class="sidebar">
-    <a href="../views/home.hbs">
+    <a href="../views/home.html">
         <div>
             <span class="material-symbols-outlined">home</span> Inicio
         </div>
     </a>
-    <a href="../views/calendar.hbs">
+    <a href="../views/calenar.html">
         <div>
             <span class="material-symbols-outlined">calendar_today</span> Calendario
         </div>
     </a>
-    <a href="../views/equipos.hbs">
+    <a href="../views/equipos.html">
         <div>
             <span class="material-symbols-outlined">description</span> Equipos
         </div>
     </a>
-    <a href="../views/reporte.hbs">
+    <a href="../views/reporte.html">
         <div>
             <span class="material-symbols-outlined">assessment</span> Generar Reporte
         </div>
     </a>
-    <a href="../views/confirmacion.hbs">
+    <a href="../views/comprobante.html">
         <div>
             <span class="material-symbols-outlined">badge</span> Confirmacion
         </div>
@@ -71,7 +71,7 @@
     </form>
 
     <!-- Tabla -->
-    <table class="tabla">
+    <table class="tabla" id="tablaReportes">
       <thead>
         <tr>
           <th>ID Comprobante</th>
@@ -82,25 +82,91 @@
           <th>Apellido del Responsable</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>101</td>
-          <td><a href="documento1.pdf" target="_blank">Ver PDF</a></td>
-          <td>2023-10-15</td>
-          <td>Juan</td>
-          <td>Pérez</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>102</td>
-          <td><a href="documento2.pdf" target="_blank">Ver PDF</a></td>
-          <td>2023-10-20</td>
-          <td>María</td>
-          <td>Gómez</td>
-        </tr>
+      <tbody id="tablaBody">
+        <!-- Los datos se agregarán dinámicamente -->
       </tbody>
     </table>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  cargarDatosGuardados();
+
+  const formulario = document.getElementById('formulario');
+  formulario.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const datosReporte = {
+      idReporte: document.getElementById('ID_REPORTE').value,
+      fechaReparacion: document.getElementById('date').value,
+      fechaCorte: document.getElementById('fecha_corte').value,
+      nombre: document.getElementById('nombre').value,
+      apellido: document.getElementById('apellido').value,
+      idEquipo: document.getElementById('idEquipo').value,
+      frecuencia: document.getElementById('frecuencia').value,
+      piso: document.getElementById('piso').value,
+      idComprobante: Date.now().toString(),
+      fechaTermino: new Date().toISOString().split('T')[0]
+    };
+
+    guardarReporte(datosReporte);
+    agregarReporteATabla(datosReporte);
+    generarWord(datosReporte); // 👉 LLAMADA AQUÍ
+    formulario.reset();
+  });
+});
+
+function guardarReporte(datos) {
+  let reportes = JSON.parse(sessionStorage.getItem('reportesTemporales')) || [];
+  reportes.push(datos);
+  sessionStorage.setItem('reportesTemporales', JSON.stringify(reportes));
+}
+
+function cargarDatosGuardados() {
+  const reportes = JSON.parse(sessionStorage.getItem('reportesTemporales')) || [];
+  reportes.forEach(reporte => {
+    agregarReporteATabla(reporte);
+  });
+}
+
+function agregarReporteATabla(reporte) {
+  const tablaBody = document.getElementById('tablaBody');
+
+  const fila = document.createElement('tr');
+  fila.innerHTML = `
+    <td>${reporte.idComprobante}</td>
+    <td>${reporte.idReporte}</td>
+    <td><a href="#" onclick="generarPDF('${reporte.idComprobante}')">Generar PDF</a></td>
+    <td>${reporte.fechaTermino}</td>
+    <td>${reporte.nombre}</td>
+    <td>${reporte.apellido}</td>
+  `;
+
+  tablaBody.appendChild(fila);
+}
+
+function generarPDF(idComprobante) {
+  const nombreArchivoPDF = 'Equipo101.pdf';
+  const rutaAbsoluta = window.location.origin + '/' + nombreArchivoPDF;
+  window.open(rutaAbsoluta + '?nocache=' + Date.now(), '_blank');
+}
+
+// ✅ ESTA ES LA FUNCIÓN QUE DEBES TENER FUERA DE CUALQUIER OTRA
+async function generarWord(datos) {
+  const response = await fetch('http://localhost:3000/generar-doc', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos)
+  });
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Reporte_${datos.idComprobante}.docx`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+  </script>
 </body>
 </html>

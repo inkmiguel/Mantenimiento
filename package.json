@@ -11,6 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cors": "^2.8.5",
+    "docx": "^9.3.0",
     "docxtemplater": "^3.60.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

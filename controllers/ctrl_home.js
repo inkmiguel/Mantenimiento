@@ -1,5 +1,5 @@
 module.exports = {
-    gethome: (res, req)=>{
+    gethome: (req, res)=>{
         res.render('home', {
             title: 'Home'   
         });
